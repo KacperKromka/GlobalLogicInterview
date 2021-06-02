@@ -54,12 +54,14 @@ public class Main {
             if (!characterList.isEmpty()) {
                 Key key = new Key(new HashSet<Character>(characterList), word.length());
                 map.computeIfAbsent(key, keyV -> new ComperableAtomicInteger()).addAndGet(characterList.size());
-                map.entrySet()
-                        .stream()
-                        .sorted(Map.Entry.<Key,ComperableAtomicInteger>comparingByValue());
             }
         }
-        return map;
+        LinkedHashMap<Key, ComperableAtomicInteger> sorted = new LinkedHashMap<>();
+                map.entrySet()
+                .stream()
+                .sorted(Map.Entry.<Key,ComperableAtomicInteger>comparingByValue())
+                .forEach(e -> sorted.put(e.getKey(), e.getValue()));
+        return sorted;
     }
 
     private static String hideSpecialChars(String s) {
